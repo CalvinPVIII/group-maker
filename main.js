@@ -1,6 +1,18 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const Grouper = require("./src/js/Grouper");
 const path = require("path");
+
+ipcMain.handle("groupNames", async (event, data) => {
+  const result = await Grouper.createGroups(data.names, data.numberOfGroups);
+  return result;
+});
+
+ipcMain.handle("moveToGroup", async (event, data) => {
+  // const result = await Grouper.createGroups(data.names, data.numberOfGroups);
+  // console.log(result);
+  // return result;
+});
 
 function createWindow() {
   // Create the browser window.
@@ -9,9 +21,9 @@ function createWindow() {
     height: 600,
     webPreferences: {
       // need these for node stuff
-      // nodeIntegration: true,
-      // enableRemoteModule: true,
-      // contextIsolation: false,
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
       preload: path.join(__dirname, "preload.js"),
     },
   });
