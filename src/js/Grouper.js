@@ -1,14 +1,10 @@
-const fs = require("fs").promises;
-
 class Grouper {
-  static async createGroups(namesArray, numberOfGroups) {
+  static groupHistory = {};
+
+  static createGroups(namesArray, numberOfGroups) {
     const groups = [];
     const maxNumber = Math.ceil(namesArray.length / numberOfGroups);
     let currentGroup = 0;
-    let groupHistory;
-    const data = await fs.readFile("src/js/history.json", "utf-8");
-
-    groupHistory = JSON.parse(data);
 
     while (namesArray.length > 0) {
       const randomNumber = Math.floor(
@@ -19,20 +15,6 @@ class Grouper {
         groups[currentGroup] = [];
       }
 
-      // maybe update the json file itself should be it's own thing, like a confirm groups type deal
-      groups[currentGroup].forEach((person) => {
-        if (groupHistory[`${person}&${randomPerson}`]) {
-          groupHistory[`${person}&${randomPerson}`] = groupHistory[
-            `${person}&${randomPerson}`
-          ] += 1;
-        } else if (groupHistory[`${randomPerson}&${person}`]) {
-          groupHistory[`${randomPerson}&${person}`] = groupHistory[
-            `${randomPerson}&${person}`
-          ] += 1;
-        } else {
-          groupHistory[`${randomPerson}&${person}`] = 1;
-        }
-      });
       groups[currentGroup].push(randomPerson);
       namesArray.splice(namesArray.indexOf(randomPerson), 1);
       if (groups[currentGroup].length >= maxNumber) {
@@ -40,70 +22,69 @@ class Grouper {
       }
     }
 
-    this.updateHistory(groupHistory);
-
-    return { randomGroups: groups, groupHistory: groupHistory };
+    return groups;
   }
 
-  static async removeFromHistory(movedPerson, group) {
-    const data = await fs.readFile("src/js/history.json", "utf-8");
-    const history = JSON.parse(data);
-    group
-      .filter((person) => person !== movedPerson)
-      .forEach((person) => {
-        if (history[`${person}&${movedPerson}`]) {
-          history[`${person}&${movedPerson}`] > 0
-            ? (history[`${person}&${movedPerson}`] -= 1)
-            : (history[`${person}&${movedPerson}`] = 0);
-        } else if (history[`${movedPerson}&${person}`]) {
-          history[`${movedPerson}&${person}`] > 0
-            ? (history[`${movedPerson}&${person}`] -= 1)
-            : (history[`${movedPerson}&${person}`] = 0);
+  static showGroupingHistory(groups) {
+    const updatedHistory = { ...this.groupHistory };
+    for (let i = 0; i < groups.length; i++) {
+      for (let j = 0; j < groups[i].length; j++) {
+        for (let k = j + 1; k < groups[i].length; k++) {
+          const person1 = groups[i][j];
+          const person2 = groups[i][k];
+          const key = `${person1} & ${person2}`;
+          const reverseKey = `${person2} & ${person1}`;
+          if (updatedHistory[key]) {
+            updatedHistory[key] += 1;
+          } else if (updatedHistory[reverseKey]) {
+            updatedHistory[reverseKey] += 1;
+          } else {
+            updatedHistory[key] = 1;
+          }
         }
-      });
-    this.updateHistory(history);
-    return history;
-  }
-
-  // WIP
-  static async addToHistory(movedPerson, group) {
-    const data = await fs.readFile("src/js/history.json", "utf-8");
-
-    const history = JSON.parse(data);
-    group
-      .filter((person) => person !== movedPerson)
-      .forEach((person) => {
-        if (history[`${person}&${movedPerson}`]) {
-          history[`${person}&${movedPerson}`] += 1;
-        } else if (history[`${movedPerson}&${person}`]) {
-          history[`${movedPerson}&${person}`] += 1;
-        } else {
-          history[`${movedPerson}&${person}`] = 1;
-        }
-
-        this.updateHistory(history);
-      });
-    return history;
-  }
-
-  static async updateHistory(data) {
-    fs.writeFile("src/js/history.json", JSON.stringify(data), (err) => {
-      return err ? err : "Group History Updated";
-    });
-  }
-
-  static async checkForWriteErrors() {
-    const data = await fs.readFile("src/js/history.json", "utf-8");
-    if (
-      data[data.length - 1] &&
-      data[data.length - 2] &&
-      data[data.length - 1] === data[data.length - 2]
-    ) {
-      console.log("writeError");
-      fs.writeFile("src/js/history.json", data.slice(0, -1), (err) => {
-        return err ? err : "cleaned file";
-      });
+      }
     }
+    this.groupHistory = updatedHistory;
+    return updatedHistory;
+  }
+
+  static saveGroupingHistory(groups) {
+    this.groupHistory = this.showGroupingHistory(groups);
+  }
+
+  static removeFromHistory(movedPerson, oldGroup) {
+    const updatedHistory = { ...this.groupHistory };
+    const group = oldGroup.filter((person) => movedPerson !== person);
+
+    group.forEach((person) => {
+      const key = `${person} & ${movedPerson}`;
+      const reverseKey = `${movedPerson} & ${person}`;
+      if (updatedHistory[key]) {
+        updatedHistory[key] -= 1;
+      } else if (updatedHistory[reverseKey]) {
+        updatedHistory[reverseKey] -= 1;
+      }
+    });
+    oldGroup.splice(oldGroup.indexOf(movedPerson), 1);
+    this.groupHistory = updatedHistory;
+    return { group: group, history: updatedHistory };
+  }
+
+  static addToHistory(movedPerson, newGroup) {
+    const updatedHistory = { ...this.groupHistory };
+    newGroup.forEach((person) => {
+      const key = `${person} & ${movedPerson}`;
+      const reverseKey = `${movedPerson} & ${person}`;
+      if (updatedHistory[key]) {
+        updatedHistory[key] += 1;
+      } else if (updatedHistory[reverseKey]) {
+        updatedHistory[reverseKey] += 1;
+      } else {
+        updatedHistory[key] = 1;
+      }
+    });
+    this.groupHistory = updatedHistory;
+    return { group: newGroup, history: updatedHistory };
   }
 }
 

@@ -3,8 +3,7 @@ import { useState } from "react";
 import InputNames from "./InputNames";
 import PopulatedGroups from "./PopulatedGroups";
 import GroupHistory from "./GroupHistory";
-
-const { ipcRenderer } = window.require("electron");
+import Grouper from "../js/Grouper";
 
 export default function Home() {
   const [groups, setGroups] = useState();
@@ -46,9 +45,3 @@ export default function Home() {
     </div>
   );
 }
-
-// bill
-// ted
-// bob
-// reggie
-// johnson
