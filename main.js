@@ -9,9 +9,13 @@ ipcMain.handle("groupNames", async (event, data) => {
 });
 
 ipcMain.handle("moveToGroup", async (event, data) => {
-  // const result = await Grouper.createGroups(data.names, data.numberOfGroups);
-  // console.log(result);
-  // return result;
+  const result = await Grouper.addToHistory(data.name, data.newGroup);
+  return result;
+});
+
+ipcMain.handle("removeFromGroup", async (event, data) => {
+  const result = await Grouper.removeFromHistory(data.name, data.oldGroup);
+  return result;
 });
 
 function createWindow() {

@@ -22,7 +22,7 @@ export default function GroupHistory(props) {
 
   if (Object.keys(filteredHistory).length > 0) {
     return (
-      <>
+      <div style={{ textAlign: "center" }}>
         <h1>Grouping Info</h1>
         {Object.keys(filteredHistory).map((grouping) => (
           <h4 key={grouping + filteredHistory[grouping]}>
@@ -30,7 +30,7 @@ export default function GroupHistory(props) {
             {filteredHistory[grouping]} times
           </h4>
         ))}
-      </>
+      </div>
     );
   } else {
     return <></>;
