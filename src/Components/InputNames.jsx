@@ -1,6 +1,5 @@
 import { useState } from "react";
-import "../css/InputNames.css";
-const { ipcRenderer } = window.require("electron");
+import Grouper from "../js/Grouper";
 
 export default function InputNames(props) {
   const [namesInput, setNamesInput] = useState();
@@ -13,12 +12,12 @@ export default function InputNames(props) {
       .split(/\r?\n/)
       .filter((name) => name.replace(/ /g, "") !== "");
 
-    ipcRenderer
-      .invoke("groupNames", { names: names, numberOfGroups: numberOfGroups })
-      .then((response) => {
-        props.setGroups(response.randomGroups);
-        props.updateHistory(response.groupHistory);
-      });
+    const result = Grouper.createGroups(names, numberOfGroups);
+    const history = Grouper.showGroupingHistory(result);
+
+    props.setGroups(result);
+
+    props.updateHistory(history);
   };
 
   return (

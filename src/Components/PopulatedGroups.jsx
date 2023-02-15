@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PopulatedGroups(props) {
   const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
@@ -30,7 +31,7 @@ export default function PopulatedGroups(props) {
       <div>
         <h2 style={{ textAlign: "center" }}>Randomized Groups</h2>
         <div
-          clasName="groupsWrapper"
+          className="groupsWrapper"
           style={{
             width: "80%",
             textAlign: "center",
@@ -43,8 +44,9 @@ export default function PopulatedGroups(props) {
           {" "}
           {props.groups.map((group) => (
             <div
+              key={uuidv4()}
               name={props.groups.indexOf(group) + 1}
-              style={{ border: "2px solid black", width: "100%" }}
+              style={{ border: "2px solid white", width: "200px" }}
             >
               <div
                 onDragOver={(e) => handleOnDragOver(e)}
@@ -59,7 +61,7 @@ export default function PopulatedGroups(props) {
                     draggable
                     id={person}
                     onDragStart={(e) => handleDrag(e)}
-                    key={`${person}-${props.groups.indexOf(group)}`}
+                    key={uuidv4()}
                   >
                     {person}
                   </p>
