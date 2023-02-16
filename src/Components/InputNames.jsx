@@ -33,7 +33,6 @@ export default function InputNames(props) {
             value={namesInput}
           />
           <br />
-          <button onClick={submitInput}> Add Names</button>
         </div>
 
         <div className="number-of-groups">
@@ -50,6 +49,10 @@ export default function InputNames(props) {
             10
           </label>
         </div>
+        <button onClick={submitInput} style={{ marginBottom: "10px" }}>
+          {" "}
+          Create Groups
+        </button>
 
         {/* WIP */}
         <div className="max-per-group">
