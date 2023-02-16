@@ -1,11 +1,10 @@
 export default class Grouper {
   static groupHistory = {};
+  static previousGroupHistory = {};
 
-  static createGroups(namesArray, numberOfGroups) {
+  static createGroups(namesArray, maxNumberOfPeople) {
     const groups = [];
-    const maxNumber = Math.ceil(namesArray.length / numberOfGroups);
     let currentGroup = 0;
-
     while (namesArray.length > 0) {
       const randomNumber = Math.floor(
         Math.random() * (namesArray.length - 1 - 0 + 1)
@@ -17,15 +16,14 @@ export default class Grouper {
 
       groups[currentGroup].push(randomPerson);
       namesArray.splice(namesArray.indexOf(randomPerson), 1);
-      if (groups[currentGroup].length >= maxNumber) {
+      if (groups[currentGroup].length >= maxNumberOfPeople) {
         currentGroup++;
       }
     }
-
     return groups;
   }
 
-  static showGroupingHistory(groups) {
+  static updateGroupHistory(groups) {
     const updatedHistory = { ...this.groupHistory };
     for (let i = 0; i < groups.length; i++) {
       for (let j = 0; j < groups[i].length; j++) {
@@ -44,12 +42,14 @@ export default class Grouper {
         }
       }
     }
+    const oldGroupHistory = { ...this.groupHistory };
     this.groupHistory = updatedHistory;
+    this.previousGroupHistory = oldGroupHistory;
     return updatedHistory;
   }
 
-  static saveGroupingHistory(groups) {
-    this.groupHistory = this.showGroupingHistory(groups);
+  static undoHistoryUpdate() {
+    this.groupHistory = { ...this.previousGroupHistory };
   }
 
   static removeFromHistory(movedPerson, oldGroup) {
@@ -73,7 +73,7 @@ export default class Grouper {
   static addToHistory(movedPerson, newGroup) {
     const updatedHistory = { ...this.groupHistory };
     newGroup.forEach((person) => {
-      if(person !== movedPerson){
+      if (person !== movedPerson) {
         const key = `${person} & ${movedPerson}`;
         const reverseKey = `${movedPerson} & ${person}`;
         if (updatedHistory[key]) {
@@ -84,9 +84,8 @@ export default class Grouper {
           updatedHistory[key] = 1;
         }
       }
-      });
+    });
     this.groupHistory = updatedHistory;
     return { group: newGroup, history: updatedHistory };
   }
 }
-
