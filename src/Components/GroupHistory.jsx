@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function GroupHistory(props) {
   const filteredHistory = {};
-
   if (props.history && props.groups) {
     props.groups.forEach((group) => {
       for (let i = 0; i < group.length; i++) {
