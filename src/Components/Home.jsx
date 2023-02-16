@@ -29,10 +29,9 @@ export default function Home() {
   const dragAndDropName = (person, newGroupNumber) => {
     let newGroups = [...groups];
 
-    newGroups[person.groupNumber - 1].splice(
-      newGroups[person.groupNumber - 1].indexOf(person.person),
-      1
-    );
+    // I have no idea why this line causes issues, but removing it seems to fix the issue of another person getting deleted
+    // newGroups[person.groupNumber - 1] = groups[person.groupNumber - 1].filter((p)=>p !== person.person)
+  
     newGroups[newGroupNumber - 1].push(person.person);
     setGroups(newGroups);
     Grouper.addToHistory(person.person, newGroups[newGroupNumber - 1]);
@@ -40,7 +39,8 @@ export default function Home() {
       person.person,
       newGroups[person.groupNumber - 1]
     );
-    updateStoredHistory(newHistory);
+    
+    updateStoredHistory(newHistory.history);
   };
 
   return (

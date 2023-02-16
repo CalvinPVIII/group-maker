@@ -73,16 +73,18 @@ class Grouper {
   static addToHistory(movedPerson, newGroup) {
     const updatedHistory = { ...this.groupHistory };
     newGroup.forEach((person) => {
-      const key = `${person} & ${movedPerson}`;
-      const reverseKey = `${movedPerson} & ${person}`;
-      if (updatedHistory[key]) {
-        updatedHistory[key] += 1;
-      } else if (updatedHistory[reverseKey]) {
-        updatedHistory[reverseKey] += 1;
-      } else {
-        updatedHistory[key] = 1;
+      if(person !== movedPerson){
+        const key = `${person} & ${movedPerson}`;
+        const reverseKey = `${movedPerson} & ${person}`;
+        if (updatedHistory[key]) {
+          updatedHistory[key] += 1;
+        } else if (updatedHistory[reverseKey]) {
+          updatedHistory[reverseKey] += 1;
+        } else {
+          updatedHistory[key] = 1;
+        }
       }
-    });
+      });
     this.groupHistory = updatedHistory;
     return { group: newGroup, history: updatedHistory };
   }

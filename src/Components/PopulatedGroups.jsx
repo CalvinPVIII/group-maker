@@ -2,13 +2,13 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function PopulatedGroups(props) {
-  const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
-
+  // const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
+  let draggedPerson;
   const handleDrag = (e) => {
-    setCurrentlyDraggedPerson({
+    draggedPerson = { 
       person: e.target.id,
       groupNumber: parseInt(e.target.parentElement.getAttribute("name")),
-    });
+    }
   };
 
   const handleOnDragOver = (e) => {
@@ -17,13 +17,14 @@ export default function PopulatedGroups(props) {
   };
 
   const handleDrop = (e) => {
+   
     e.preventDefault();
     e.stopPropagation();
-
     props.dragAndDropName(
-      currentlyDraggedPerson,
+      draggedPerson,
       parseInt(e.target.parentElement.getAttribute("name"))
     );
+    draggedPerson = {}
   };
 
   if (props.groups) {
@@ -57,14 +58,16 @@ export default function PopulatedGroups(props) {
               >
                 <h4>Group {props.groups.indexOf(group) + 1}</h4>
                 {group.map((person) => (
-                  <p
-                    draggable
-                    id={person}
-                    onDragStart={(e) => handleDrag(e)}
-                    key={uuidv4()}
-                  >
-                    {person}
-                  </p>
+                  
+                    <p
+                     key={uuidv4()}
+                      draggable
+                      id={person}
+                      onDragStart={(e) => handleDrag(e)}
+                      >
+                      {person}
+                    </p>
+                  
                 ))}
               </div>
               <button
