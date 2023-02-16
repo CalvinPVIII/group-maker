@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function GroupHistory(props) {
   const filteredHistory = {};
 
-  if (props.history) {
+  if (props.history && props.groups) {
     props.groups.forEach((group) => {
       for (let i = 0; i < group.length; i++) {
-        if (group[i + 1] && props.history[`${group[i]}&${group[i + 1]}`]) {
-          filteredHistory[`${group[i]}&${group[i + 1]}`] =
-            props.history[`${group[i]}&${group[i + 1]}`];
-        } else if (
-          group[i + 1] &&
-          props.history[`${group[i + 1]}&${group[i]}`]
-        ) {
-          filteredHistory[`${group[i + 1]}&${group[i]}`] =
-            props.history[`${group[i + 1]}&${group[i]}`];
+        const currentPerson = group[i];
+        for (let j = 0; j < group.length; j++) {
+          const nextPerson = group[j];
+          if (props.history[`${currentPerson} & ${nextPerson}`]) {
+            filteredHistory[`${currentPerson} & ${nextPerson}`] =
+              props.history[`${currentPerson} & ${nextPerson}`];
+          } else if (props.history[`${nextPerson} & ${currentPerson}`]) {
+            filteredHistory[`${nextPerson} & ${currentPerson}`] =
+              props.history[`${nextPerson} & ${currentPerson}`];
+          }
         }
       }
     });
@@ -25,7 +26,16 @@ export default function GroupHistory(props) {
       <div style={{ textAlign: "center" }}>
         <h1>Grouping Info</h1>
         {Object.keys(filteredHistory).map((grouping) => (
-          <h4 key={grouping + filteredHistory[grouping]}>
+          <h4
+            key={uuidv4()}
+            style={
+              filteredHistory[grouping] >= 4 && filteredHistory[grouping] < 8
+                ? { color: "yellow" }
+                : filteredHistory[grouping] >= 8
+                ? { color: "red" }
+                : { color: "white" }
+            }
+          >
             {grouping.replace("&", " and ")} have been in the same group{" "}
             {filteredHistory[grouping]} times
           </h4>

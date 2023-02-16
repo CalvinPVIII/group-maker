@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PopulatedGroups(props) {
-  const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
-
+  // const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
+  let draggedPerson;
   const handleDrag = (e) => {
-    setCurrentlyDraggedPerson({
+    draggedPerson = { 
       person: e.target.id,
       groupNumber: parseInt(e.target.parentElement.getAttribute("name")),
-    });
+    }
   };
 
   const handleOnDragOver = (e) => {
@@ -16,13 +17,14 @@ export default function PopulatedGroups(props) {
   };
 
   const handleDrop = (e) => {
+   
     e.preventDefault();
     e.stopPropagation();
-
     props.dragAndDropName(
-      currentlyDraggedPerson,
+      draggedPerson,
       parseInt(e.target.parentElement.getAttribute("name"))
     );
+    draggedPerson = {}
   };
 
   if (props.groups) {
@@ -30,7 +32,7 @@ export default function PopulatedGroups(props) {
       <div>
         <h2 style={{ textAlign: "center" }}>Randomized Groups</h2>
         <div
-          clasName="groupsWrapper"
+          className="groupsWrapper"
           style={{
             width: "80%",
             textAlign: "center",
@@ -43,8 +45,9 @@ export default function PopulatedGroups(props) {
           {" "}
           {props.groups.map((group) => (
             <div
+              key={uuidv4()}
               name={props.groups.indexOf(group) + 1}
-              style={{ border: "2px solid black", width: "100%" }}
+              style={{ border: "2px solid white", width: "200px" }}
             >
               <div
                 onDragOver={(e) => handleOnDragOver(e)}
@@ -55,14 +58,16 @@ export default function PopulatedGroups(props) {
               >
                 <h4>Group {props.groups.indexOf(group) + 1}</h4>
                 {group.map((person) => (
-                  <p
-                    draggable
-                    id={person}
-                    onDragStart={(e) => handleDrag(e)}
-                    key={`${person}-${props.groups.indexOf(group)}`}
-                  >
-                    {person}
-                  </p>
+                  
+                    <p
+                     key={uuidv4()}
+                      draggable
+                      id={person}
+                      onDragStart={(e) => handleDrag(e)}
+                      >
+                      {person}
+                    </p>
+                  
                 ))}
               </div>
               <button
