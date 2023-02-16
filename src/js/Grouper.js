@@ -1,4 +1,4 @@
-class Grouper {
+export default class Grouper {
   static groupHistory = {};
 
   static createGroups(namesArray, numberOfGroups) {
@@ -90,4 +90,3 @@ class Grouper {
   }
 }
 
-module.exports = Grouper;
