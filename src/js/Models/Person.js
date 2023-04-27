@@ -5,7 +5,7 @@ export default class Person {
   constructor(name, id, blacklist, pairHistory, groupHistory, cohortId) {
     this.id = id;
     this.name = name;
-    this.blacklist = blacklist; // array of ids
+    this.blacklist = blacklist; // array of ids/names
     this.pairHistory = pairHistory; // key value pair {personId: id, numberOfTimesPaired: int}
     this.groupHistory = groupHistory; // key value pair {personId: id, numberOfTimesPaired: int}
     this.cohortId = cohortId;
@@ -47,5 +47,36 @@ export default class Person {
     } else {
       return "No person found";
     }
+  }
+
+  #addToHistory(listName, pair) {
+    if (this[listName][pair.id]) {
+      this[listName][pair.id].timesMatched += 1;
+      pair[listName][this.id].timesMatched += 1;
+    } else {
+      this[listName][pair.id] = {
+        name: pair.name,
+        timesMatched: 1,
+      };
+
+      pair[listName][this.id] = {
+        name: this.name,
+        timesMatched: 1,
+      };
+    }
+    Person.update(pair);
+    return Person.update(this);
+  }
+  addToPairHistory(pair) {
+    return this.#addToHistory("pairHistory", pair);
+  }
+  addToGroupHistory(pair) {
+    return this.#addToHistory("groupHistory", pair);
+  }
+
+  addToBlackList(person) {
+    return DatabaseHelper.addToArray("people", this.id, "blacklist", {
+      data: [...this.blacklist, { id: person.id, name: person.name }],
+    });
   }
 }

@@ -1,10 +1,8 @@
 import db from "./db.js";
 
-import { setDoc, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, deleteDoc, updateDoc, getDocs, collection } from "firebase/firestore";
 
 export default class DatabaseHelper {
-  static _db = db;
-
   static async post(collection, data) {
     try {
       await setDoc(doc(db, collection, data.id), data);
@@ -42,8 +40,24 @@ export default class DatabaseHelper {
   static async addToArray(collection, id, objName, data) {
     try {
       const ref = doc(db, collection, id);
+      if (data.id) {
+        await updateDoc(ref, { [`${objName}.${data.id}`]: data.data });
+      } else {
+        await updateDoc(ref, { [objName]: data.data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      await updateDoc(ref, { [`${objName}.${data.id}`]: data.data });
+  static async all(collectionToGet) {
+    try {
+      let result = [];
+      const snapshot = await getDocs(collection(db, collectionToGet));
+      snapshot.forEach((doc) => {
+        result.push(doc.data());
+      });
+      return result;
     } catch (error) {
       console.log(error);
     }
