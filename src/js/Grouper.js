@@ -6,9 +6,7 @@ export default class Grouper {
     const groups = [];
     let currentGroup = 0;
     while (namesArray.length > 0) {
-      const randomNumber = Math.floor(
-        Math.random() * (namesArray.length - 1 - 0 + 1)
-      );
+      const randomNumber = Math.floor(Math.random() * (namesArray.length - 1 - 0 + 1));
       const randomPerson = namesArray[randomNumber];
       if (!groups[currentGroup]) {
         groups[currentGroup] = [];
@@ -42,6 +40,7 @@ export default class Grouper {
         }
       }
     }
+
     const oldGroupHistory = { ...this.groupHistory };
     this.groupHistory = updatedHistory;
     this.previousGroupHistory = oldGroupHistory;

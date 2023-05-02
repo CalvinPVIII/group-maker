@@ -4,6 +4,7 @@ import { setDoc, doc, getDoc, deleteDoc, updateDoc, getDocs, collection } from "
 
 export default class DatabaseHelper {
   static async post(collection, data) {
+    console.log(data);
     try {
       await setDoc(doc(db, collection, data.id), data);
       return "success";

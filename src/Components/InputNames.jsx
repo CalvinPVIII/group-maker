@@ -1,10 +1,18 @@
 import { useState } from "react";
+import Cohort from "../js/Models/Cohort";
+import Person from "../js/Models/Person";
 
 export default function InputNames(props) {
   const [namesInput, setNamesInput] = useState("");
 
   const handleNamesSubmit = () => {
     const names = namesInput.split(/\r?\n/).filter((name) => name.replace(/ /g, "") !== "");
+    names.forEach((name) => {
+      const person = new Person(name, null, [], [], [], props.cohort.id);
+      Person.save(person);
+      // console.log(person);
+      props.cohort.addPeople(person);
+    });
     console.log(names);
   };
 

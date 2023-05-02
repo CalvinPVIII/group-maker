@@ -1,14 +1,26 @@
 import DatabaseHelper from "../Firebase/DatabaseHelper.js";
 import { v4 as uuidv4 } from "uuid";
+import Cohort from "./Cohort.js";
 
 export default class Person {
   constructor(name, id, blacklist, pairHistory, groupHistory, cohortId) {
-    this.id = id;
+    this.id = id || uuidv4();
     this.name = name;
     this.blacklist = blacklist; // array of ids/names
     this.pairHistory = pairHistory; // key value pair {personId: id, numberOfTimesPaired: int}
     this.groupHistory = groupHistory; // key value pair {personId: id, numberOfTimesPaired: int}
     this.cohortId = cohortId;
+  }
+
+  toJson() {
+    return {
+      id: this.id,
+      name: this.name,
+      blacklist: this.blacklist,
+      pairHistory: this.pairHistory,
+      groupHistory: this.groupHistory,
+      cohortId: this.cohortId,
+    };
   }
 
   static all() {}
@@ -17,26 +29,12 @@ export default class Person {
     return DatabaseHelper.find("people", id);
   }
 
-  static create(person) {
-    return DatabaseHelper.post("people", {
-      id: person.id || uuidv4(),
-      name: person.name,
-      blacklist: person.blacklist,
-      pairHistory: person.pairHistory,
-      groupHistory: person.groupHistory,
-      cohortId: person.cohortId,
-    });
+  static save(person) {
+    return DatabaseHelper.post("people", person.toJson());
   }
   static update(person) {
     if (person.id) {
-      return DatabaseHelper.post("people", {
-        id: person.id,
-        name: person.name,
-        blacklist: person.blacklist,
-        pairHistory: person.pairHistory,
-        groupHistory: person.groupHistory,
-        cohortId: person.cohortId,
-      });
+      return DatabaseHelper.post("people", person.toJson());
     } else {
       return "No person found";
     }
@@ -67,16 +65,52 @@ export default class Person {
     Person.update(pair);
     return Person.update(this);
   }
+  #removeFromHistory(listName, pair) {
+    delete this[listName][pair.id];
+    delete pair[listName][this.id];
+    Person.update(pair);
+    return Person.update(this);
+  }
+
   addToPairHistory(pair) {
     return this.#addToHistory("pairHistory", pair);
   }
   addToGroupHistory(pair) {
     return this.#addToHistory("groupHistory", pair);
   }
+  removeFromGroupHistory(pair) {
+    return this.#removeFromHistory("groupHistory", pair);
+  }
+  removeFromPairHistory(pair) {
+    return this.#removeFromHistory("pairHistory", pair);
+  }
 
   addToBlackList(person) {
-    return DatabaseHelper.addToArray("people", this.id, "blacklist", {
-      data: [...this.blacklist, { id: person.id, name: person.name }],
+    this.blacklist = [...this.blacklist, person.toJson()];
+    person.blacklist = [...person.blacklist, this.toJson()];
+    Person.update(person);
+    Person.update(this);
+  }
+
+  removeFromBlacklist(person) {
+    this.blacklist = this.blacklist.filter((p) => p.id !== person.id);
+    person.blacklist = person.blacklist.filter((p) => p.id !== this.id);
+    Person.update(person);
+    Person.update(this);
+  }
+
+  addAllToGroupHistory(group) {
+    const filteredGroup = group.filter((p) => p.id !== this.id);
+    filteredGroup.forEach((person) => {
+      this.addToGroupHistory(person);
     });
+  }
+
+  cohort() {
+    return Cohort.find(this.cohortId);
+  }
+
+  static format(personObj) {
+    return new Person(personObj.name, personObj.id, personObj.blacklist, personObj.pairHistory, personObj.groupHistory, personObj.cohortId);
   }
 }
