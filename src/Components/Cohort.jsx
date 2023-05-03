@@ -37,6 +37,7 @@ export default function CohortComponent(props) {
               <p key={person.id}>{person.name}</p>
             ))}
             <button onClick={handleCreateGroups}>Create Groups</button>
+            {currentCohort.groups && currentCohort.groups.length > 0 ? <></> : <></>}
           </>
         ) : (
           <>There are no people</>

@@ -2,14 +2,20 @@ import { useState, useEffect, useContext } from "react";
 import Cohort from "../js/Models/Cohort.js";
 import CohortForm from "./CohortForm.jsx";
 import CohortComponent from "./Cohort.jsx";
+import { collection, onSnapshot } from "firebase/firestore";
+import db from "../js/Firebase/db.js";
 
 export default function Home() {
   const [cohorts, setCohorts] = useState();
   const [currentlyVisibleState, setCurrentlyVisibleState] = useState("home");
   const [selectedCohort, setSelectedCohort] = useState();
   useEffect(() => {
-    Cohort.all().then((response) => {
-      setCohorts(response);
+    const unsub = onSnapshot(collection(db, "cohorts"), (snapshot) => {
+      const result = [];
+      snapshot.forEach((cohort) => {
+        result.push({ ...cohort.data() });
+      });
+      setCohorts(result);
     });
   }, []);
 
@@ -50,6 +56,7 @@ export default function Home() {
       );
   }
 
+  console.log(cohorts);
   return (
     <>
       {visibleState}
