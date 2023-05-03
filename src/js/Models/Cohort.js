@@ -9,7 +9,7 @@ export default class Cohort {
     this.creatorId = creatorId;
     this.id = id || uuidv4();
     this.name = name;
-    this.people = people; // array of people objects, might be better as array of ids
+    this.people = people;
     this.description = description;
     this.groups = groups;
   }
@@ -52,16 +52,9 @@ export default class Cohort {
     }
   }
 
-  // addPeople(person) {
-  //   DatabaseHelper.addToArray("cohorts", this.id, "people", { id: person.id, data: person.toJson() });
-  //   person.cohortId = this.id;
-  //   Person.update(person);
-  // }
-
   addPeople(person) {
     this.people = [...this.people, person.toJson()];
-    console.log(this);
-    // return Cohort.update(this);
+    return Cohort.update(this);
   }
 
   async getPeople() {
@@ -84,7 +77,8 @@ export default class Cohort {
     let currentGroup = 0;
     while (newPeopleArray.length > 0) {
       const randomNumber = Math.floor(Math.random() * (newPeopleArray.length - 1 - 0 + 1));
-      const randomPerson = newPeopleArray[randomNumber];
+      const randomPerson = newPeopleArray[randomNumber].toJson();
+
       if (!groups[currentGroup]) {
         groups[currentGroup] = [];
       }
@@ -99,12 +93,14 @@ export default class Cohort {
       const newGroup = [...group];
       while (newGroup.length > 0) {
         for (let i = 1; i < newGroup.length; i++) {
-          const person = newGroup[0];
+          const person = Person.format(newGroup[0]);
           person.addToGroupHistory(newGroup[i]);
         }
         newGroup.shift();
       }
     });
+    this.groups = Object.assign({}, groups);
+    Cohort.update(this);
     return groups;
   }
 }

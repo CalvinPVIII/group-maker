@@ -5,10 +5,16 @@ import InputNames from "./InputNames";
 export default function CohortComponent(props) {
   const [people, setPeople] = useState();
   const [currentCohort, setCurrentCohort] = useState();
-  const cohort = new Cohort(props.cohort.name, props.cohort.people, props.cohort.description, props.cohort.id, props.cohort.creatorId);
+  const cohort = new Cohort(
+    props.cohort.name,
+    props.cohort.people,
+    props.cohort.description,
+    props.cohort.id,
+    props.cohort.creatorId,
+    props.cohort.groups
+  );
   useEffect(() => {
     setCurrentCohort(cohort);
-    console.log(cohort);
 
     cohort.getPeople().then((response) => {
       setPeople(response);
@@ -16,11 +22,10 @@ export default function CohortComponent(props) {
   }, []);
 
   const handleCreateGroups = () => {
-    console.log(cohort.createGroups(people, 4));
+    console.log(cohort.createGroups(people, 2));
   };
 
   if (currentCohort) {
-    console.log(people);
     return (
       <>
         <h1>Cohort: {currentCohort.name}</h1>

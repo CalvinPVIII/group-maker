@@ -15,6 +15,7 @@ export default function Home() {
 
   const handleCohortNameClick = (cohort) => {
     setSelectedCohort(cohort);
+    console.log(cohort);
     setCurrentlyVisibleState("selected_cohort");
   };
 

@@ -30,11 +30,11 @@ export default class Person {
   }
 
   static save(person) {
-    return DatabaseHelper.post("people", person.toJson());
+    return DatabaseHelper.post("people", person);
   }
   static update(person) {
     if (person.id) {
-      return DatabaseHelper.post("people", person.toJson());
+      return DatabaseHelper.post("people", person);
     } else {
       return "No person found";
     }

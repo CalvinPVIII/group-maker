@@ -1,12 +1,15 @@
 import db from "./db.js";
+import Person from "../Models/Person.js";
+import Cohort from "../Models/Cohort.js";
 
 import { setDoc, doc, getDoc, deleteDoc, updateDoc, getDocs, collection } from "firebase/firestore";
 
 export default class DatabaseHelper {
   static async post(collection, data) {
-    console.log(data);
     try {
-      await setDoc(doc(db, collection, data.id), data);
+      let formattedData = data.toJson ? data.toJson() : data;
+
+      await setDoc(doc(db, collection, data.id), formattedData);
       return "success";
     } catch (err) {
       console.log("Error: " + err);
@@ -35,19 +38,6 @@ export default class DatabaseHelper {
     } catch (error) {
       console.log("There was an error: " + error);
       return "There was an error: " + error;
-    }
-  }
-
-  static async addToArray(collection, id, objName, data) {
-    try {
-      const ref = doc(db, collection, id);
-      if (data.id) {
-        await updateDoc(ref, { [`${objName}.${data.id}`]: data.data });
-      } else {
-        await updateDoc(ref, { [objName]: data.data });
-      }
-    } catch (error) {
-      console.log(error);
     }
   }
 
