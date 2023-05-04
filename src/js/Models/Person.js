@@ -66,8 +66,12 @@ export default class Person {
     return Person.update(this);
   }
   #removeFromHistory(listName, pair) {
-    delete this[listName][pair.id];
-    delete pair[listName][this.id];
+    if (this[listName][pair.id]) {
+      this[listName][pair.id].timesMatched -= 1;
+    }
+    if (pair[listName][this.id]) {
+      pair[listName][this.id].timesMatched -= 1;
+    }
     Person.update(pair);
     return Person.update(this);
   }

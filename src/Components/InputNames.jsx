@@ -16,13 +16,13 @@ export default function InputNames(props) {
   };
 
   return (
-    <>
+    <div style={{ textAlign: "center" }}>
       <h2>Enter Names Separated by Lines</h2>
       <div className="input-area">
         <textarea style={{ height: "200px" }} className="input-names" onChange={(e) => setNamesInput(e.target.value)} value={namesInput} />
         <br />
         <button onClick={handleNamesSubmit}>Add People</button>
       </div>
-    </>
+    </div>
   );
 }

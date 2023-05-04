@@ -71,12 +71,13 @@ export default class Cohort {
     return new Cohort(cohortObj.name, cohortObj.people, cohortObj.description, cohortObj.id, cohortObj.creatorId, cohortObj.groups);
   }
 
+  // TO DO: if there is only one person left, add them to a group instead of making a new one
   createGroups(peopleArray, maxNumberOfPeople) {
-    const newPeopleArray = [...peopleArray];
+    let newPeopleArray = [...peopleArray];
     const groups = [];
     let currentGroup = 0;
     while (newPeopleArray.length > 0) {
-      const randomNumber = Math.floor(Math.random() * (newPeopleArray.length - 1 - 0 + 1));
+      const randomNumber = Math.floor(Math.random() * (newPeopleArray.length - 1));
       const randomPerson = newPeopleArray[randomNumber].toJson();
 
       if (!groups[currentGroup]) {
@@ -84,7 +85,8 @@ export default class Cohort {
       }
 
       groups[currentGroup].push(randomPerson);
-      newPeopleArray.splice(newPeopleArray.indexOf(randomPerson), 1);
+
+      newPeopleArray = newPeopleArray.filter((p) => p.id !== randomPerson.id);
       if (groups[currentGroup].length >= maxNumberOfPeople) {
         currentGroup++;
       }
@@ -102,5 +104,22 @@ export default class Cohort {
     this.groups = Object.assign({}, groups);
     Cohort.update(this);
     return groups;
+  }
+
+  addPersonToGroup(groupKey, person) {
+    this.groups[groupKey].forEach((p) => {
+      Person.format(p).addToGroupHistory(person);
+    });
+    this.groups[groupKey].push(person);
+    Cohort.update(this);
+  }
+
+  removePersonFromGroup(groupKey, person) {
+    const filteredGroup = this.groups[groupKey].filter((p) => p.id !== person.id);
+    filteredGroup.forEach((p) => {
+      Person.format(p).removeFromGroupHistory(person);
+    });
+    this.groups[groupKey] = filteredGroup;
+    Cohort.update(this);
   }
 }

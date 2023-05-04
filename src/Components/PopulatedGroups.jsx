@@ -2,12 +2,13 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function PopulatedGroups(props) {
   // const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
-  let draggedPerson;
-  const handleDrag = (e) => {
-    draggedPerson = {
-      person: e.target.id,
-      groupNumber: parseInt(e.target.parentElement.getAttribute("name")),
-    };
+  let draggedPersonInfo = {
+    person: null,
+    initialGroup: null,
+  };
+  const handleDrag = (groupKey, person) => {
+    draggedPersonInfo.person = person;
+    draggedPersonInfo.initialGroup = groupKey;
   };
 
   const handleOnDragOver = (e) => {
@@ -15,14 +16,14 @@ export default function PopulatedGroups(props) {
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // props.dragAndDropName(
-    //   draggedPerson,
-    //   parseInt(e.target.parentElement.getAttribute("name"))
-    // );
-    draggedPerson = {};
+  const handleDrop = (groupKey) => {
+    if (groupKey === draggedPersonInfo.initialGroup) return;
+    props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
+    props.cohort.addPersonToGroup(groupKey, draggedPersonInfo.person);
+    draggedPersonInfo = {
+      person: null,
+      initialGroup: null,
+    };
   };
 
   if (props.groups) {
@@ -46,14 +47,14 @@ export default function PopulatedGroups(props) {
               <div
                 onDragOver={(e) => handleOnDragOver(e)}
                 className="group"
-                onDrop={(e) => handleDrop(e)}
+                onDrop={() => handleDrop(props.groups.indexOf(group))}
                 name={props.groups.indexOf(group) + 1}
                 key={props.groups.indexOf(group) + 1}
               >
                 <h4>Group {props.groups.indexOf(group) + 1}</h4>
                 {group.map((person) => (
-                  <p key={uuidv4()} draggable id={person} onDragStart={(e) => handleDrag(e)}>
-                    {person}
+                  <p key={uuidv4()} draggable id={person} onDragStart={() => handleDrag(props.groups.indexOf(group), person)}>
+                    {person.name}
                   </p>
                 ))}
               </div>

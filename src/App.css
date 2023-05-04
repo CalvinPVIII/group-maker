@@ -7,3 +7,21 @@ textarea {
   background-color: rgb(57, 55, 55);
   color: white;
 }
+
+.hidden {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 100ms;
+}
+
+.hidden > div {
+  overflow: hidden;
+}
+
+.shown {
+  grid-template-rows: 1fr;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
