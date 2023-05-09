@@ -3,10 +3,12 @@ import Cohort from "../js/Models/Cohort";
 import InputNames from "./InputNames";
 import PopulatedGroups from "./PopulatedGroups";
 import PeopleNames from "./PeopleNames";
+import GroupingSettings from "./GroupingSettings";
 
 export default function CohortComponent(props) {
   const [people, setPeople] = useState();
   const [currentCohort, setCurrentCohort] = useState();
+  const [numberOfGroupsOrMaxSize, setNumberOfGroupsOrMaxSize] = useState("numberOfGroups");
 
   const togglePeopleNames = (element) => {
     const target = element.target.nextElementSibling;
@@ -34,8 +36,8 @@ export default function CohortComponent(props) {
     });
   }, [props.cohort]);
 
-  const handleCreateGroups = () => {
-    currentCohort.createGroups(people, 2);
+  const handleCreateGroups = (numberOfGroups) => {
+    currentCohort.createGroups(people, numberOfGroups);
   };
 
   if (currentCohort) {
@@ -54,6 +56,7 @@ export default function CohortComponent(props) {
             <PeopleNames people={people} cohort={currentCohort} />
 
             <button onClick={handleCreateGroups}>Create Groups</button>
+            <GroupingSettings namesLength={people.length} handleCreateGroups={handleCreateGroups} />
             {currentCohort.groups && Object.values(currentCohort.groups).length > 0 ? (
               <>
                 <PopulatedGroups groups={Object.values(currentCohort.groups)} cohort={currentCohort} />
