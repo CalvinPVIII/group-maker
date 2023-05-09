@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
 export default function PopulatedGroups(props) {
-  // const [currentlyDraggedPerson, setCurrentlyDraggedPerson] = useState("");
   let draggedPersonInfo = {
     person: null,
     initialGroup: null,
@@ -25,7 +24,7 @@ export default function PopulatedGroups(props) {
       initialGroup: null,
     };
   };
-
+  console.log(props);
   if (props.groups) {
     return (
       <div>
@@ -52,7 +51,7 @@ export default function PopulatedGroups(props) {
                 key={props.groups.indexOf(group) + 1}
               >
                 <h4>Group {props.groups.indexOf(group) + 1}</h4>
-                {group.map((person) => (
+                {group.currentGroup.map((person) => (
                   <p key={uuidv4()} draggable id={person} onDragStart={() => handleDrag(props.groups.indexOf(group), person)}>
                     {person.name}
                   </p>

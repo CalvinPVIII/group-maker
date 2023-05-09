@@ -74,25 +74,25 @@ export default class Cohort {
   // TO DO: if there is only one person left, add them to a group instead of making a new one
   createGroups(peopleArray, maxNumberOfPeople) {
     let newPeopleArray = [...peopleArray];
-    const groups = [];
-    let currentGroup = 0;
+    const groups = {};
+    let currentGroupKey = 0;
     while (newPeopleArray.length > 0) {
       const randomNumber = Math.floor(Math.random() * (newPeopleArray.length - 1));
       const randomPerson = newPeopleArray[randomNumber].toJson();
 
-      if (!groups[currentGroup]) {
-        groups[currentGroup] = [];
+      if (!groups[currentGroupKey]) {
+        groups[currentGroupKey] = { currentGroup: [] };
       }
 
-      groups[currentGroup].push(randomPerson);
+      groups[currentGroupKey].currentGroup.push(randomPerson);
 
       newPeopleArray = newPeopleArray.filter((p) => p.id !== randomPerson.id);
-      if (groups[currentGroup].length >= maxNumberOfPeople) {
-        currentGroup++;
+      if (groups[currentGroupKey].currentGroup.length >= maxNumberOfPeople) {
+        currentGroupKey++;
       }
     }
-    groups.forEach((group) => {
-      const newGroup = [...group];
+    Object.values(groups).forEach((group) => {
+      const newGroup = [...group.currentGroup];
       while (newGroup.length > 0) {
         for (let i = 1; i < newGroup.length; i++) {
           const person = Person.format(newGroup[0]);
@@ -101,7 +101,8 @@ export default class Cohort {
         newGroup.shift();
       }
     });
-    this.groups = Object.assign({}, groups);
+
+    this.groups = groups;
     Cohort.update(this);
     return groups;
   }

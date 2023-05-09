@@ -8,7 +8,6 @@ import GroupingSettings from "./GroupingSettings";
 export default function CohortComponent(props) {
   const [people, setPeople] = useState();
   const [currentCohort, setCurrentCohort] = useState();
-  const [numberOfGroupsOrMaxSize, setNumberOfGroupsOrMaxSize] = useState("numberOfGroups");
 
   const togglePeopleNames = (element) => {
     const target = element.target.nextElementSibling;
@@ -55,7 +54,6 @@ export default function CohortComponent(props) {
             </h4>
             <PeopleNames people={people} cohort={currentCohort} />
 
-            <button onClick={handleCreateGroups}>Create Groups</button>
             <GroupingSettings namesLength={people.length} handleCreateGroups={handleCreateGroups} />
             {currentCohort.groups && Object.values(currentCohort.groups).length > 0 ? (
               <>
