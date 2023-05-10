@@ -44,6 +44,7 @@ export default function CohortComponent(props) {
       <div style={{ textAlign: "center" }}>
         <h1>Cohort: {currentCohort.name}</h1>
         <h4>{currentCohort.description}</h4>
+
         {/* <InputNames cohort={currentCohort} /> */}
 
         {people && people.length > 0 ? (

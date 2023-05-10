@@ -123,4 +123,30 @@ export default class Cohort {
     this.groups[groupKey] = filteredGroup;
     Cohort.update(this);
   }
+
+  generatePairsForGroup(groupKey) {
+    const group = { ...this.groups[groupKey], currentPairs: [] };
+    let people = [...group.currentGroup];
+    while (people.length > 0) {
+      const randomPerson1 = Person.format(people[Math.floor(Math.random() * (people.length - 1))]);
+      people = people.filter((person) => person.id !== randomPerson1.id);
+
+      const randomPerson2 = Person.format(people[Math.floor(Math.random() * (people.length - 1))]);
+      people = people.filter((person) => person.id !== randomPerson2.id);
+      if (people.length === 1) {
+        const randomPerson3 = Person.format(people[0]);
+        people = people.filter((person) => person.id !== randomPerson3.id);
+        randomPerson1.addToPairHistory(randomPerson2.toJson());
+        randomPerson1.addToPairHistory(randomPerson3.toJson());
+        randomPerson2.addToPairHistory(randomPerson3.toJson());
+
+        group.currentPairs.push({ 1: randomPerson1.toJson(), 2: randomPerson2.toJson(), 3: randomPerson3.toJson() });
+      } else {
+        randomPerson1.addToPairHistory(randomPerson2.toJson());
+        group.currentPairs.push({ 1: randomPerson1.toJson(), 2: randomPerson2.toJson() });
+      }
+    }
+    this.groups[groupKey] = group;
+    Cohort.update(this);
+  }
 }
