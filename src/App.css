@@ -25,3 +25,10 @@ textarea {
 .clickable:hover {
   cursor: pointer;
 }
+
+a:visited {
+  color: white;
+}
+a {
+  color: white;
+}

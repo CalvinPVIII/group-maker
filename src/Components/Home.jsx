@@ -3,6 +3,7 @@ import CohortForm from "./CohortForm.jsx";
 import Cohort from "./Cohort.jsx";
 import { collection, onSnapshot } from "firebase/firestore";
 import db from "../js/Firebase/db.js";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [cohorts, setCohorts] = useState();
@@ -70,6 +71,9 @@ export default function Home() {
         {visibleState}
         <br />
         <button onClick={() => setCurrentlyVisibleState("home")}>Home</button>
+        <h3>
+          <Link to="/v1">Group maker v1</Link>
+        </h3>
       </div>
     </>
   );
