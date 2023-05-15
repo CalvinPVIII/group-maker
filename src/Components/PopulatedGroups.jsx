@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../css/PairStyles.css";
+import PersonModal from "./PersonModal";
 
 export default function PopulatedGroups(props) {
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const pairClasses = {
     0: "firstPair",
     1: "secondPair",
@@ -53,6 +55,8 @@ export default function PopulatedGroups(props) {
             margin: "auto",
             display: "flex",
             justifyContent: "space-evenly",
+            position: "relative",
+            zIndex: "1",
           }}
         >
           {" "}
@@ -70,7 +74,13 @@ export default function PopulatedGroups(props) {
                   {!group.currentPairs || group.currentPairs.length <= 0 ? (
                     <>
                       {group.currentGroup.map((person) => (
-                        <p key={uuidv4()} draggable id={person} onDragStart={() => handleDrag(props.groups.indexOf(group), person)}>
+                        <p
+                          key={uuidv4()}
+                          draggable
+                          id={person}
+                          onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                          onClick={() => setSelectedPerson(person)}
+                        >
                           {person.name}
                         </p>
                       ))}
@@ -85,6 +95,7 @@ export default function PopulatedGroups(props) {
                             draggable
                             id={person.id}
                             onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                            onClick={() => setSelectedPerson(person)}
                           >
                             {person.name}
                           </p>
@@ -99,6 +110,7 @@ export default function PopulatedGroups(props) {
             </>
           ))}
         </div>
+        {selectedPerson ? <PersonModal person={selectedPerson} handleExit={() => setSelectedPerson(null)} /> : <></>}
       </div>
     );
   } else {
