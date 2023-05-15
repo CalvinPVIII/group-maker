@@ -65,7 +65,10 @@ export default function CohortComponent(props) {
             )}
           </>
         ) : (
-          <>There are no people</>
+          <>
+            <p>There are no people</p>
+            <InputNames cohort={currentCohort} />
+          </>
         )}
       </div>
     );

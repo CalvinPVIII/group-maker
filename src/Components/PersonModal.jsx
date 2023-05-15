@@ -1,4 +1,5 @@
 export default function PersonModal(props) {
+  console.log(props.person);
   const wordStyle = { wordWrap: "break-word" };
   return (
     <>
@@ -29,10 +30,24 @@ export default function PersonModal(props) {
           transform: "translate(-50%, -50%)",
         }}
       >
-        <p style={wordStyle}>Name:{props.person.name}</p>
-        <p style={wordStyle}>pair history:</p>
-        <p style={wordStyle}>Group history:</p>
-        <p style={wordStyle}>Blacklist</p>
+        <p style={wordStyle}>Name: {props.person.name}</p>
+        <p style={wordStyle}>
+          Pair history:
+          {Object.values(props.person.pairHistory).map((p) => (
+            <li>
+              {p.name}: {p.timesMatched}
+            </li>
+          ))}
+        </p>
+        <p style={wordStyle}>
+          Group history:
+          {Object.values(props.person.groupHistory).map((p) => (
+            <li>
+              {p.name}: {p.timesMatched}
+            </li>
+          ))}
+        </p>
+        <p style={wordStyle}>Blacklist:</p>
       </div>
     </>
   );

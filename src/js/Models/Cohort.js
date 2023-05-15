@@ -108,19 +108,19 @@ export default class Cohort {
   }
 
   addPersonToGroup(groupKey, person) {
-    this.groups[groupKey].forEach((p) => {
+    this.groups[groupKey].currentGroup.forEach((p) => {
       Person.format(p).addToGroupHistory(person);
     });
-    this.groups[groupKey].push(person);
+    this.groups[groupKey].currentGroup.push(person);
     Cohort.update(this);
   }
 
   removePersonFromGroup(groupKey, person) {
-    const filteredGroup = this.groups[groupKey].filter((p) => p.id !== person.id);
+    const filteredGroup = this.groups[groupKey].currentGroup.filter((p) => p.id !== person.id);
     filteredGroup.forEach((p) => {
       Person.format(p).removeFromGroupHistory(person);
     });
-    this.groups[groupKey] = filteredGroup;
+    this.groups[groupKey].currentGroup = filteredGroup;
     Cohort.update(this);
   }
 
