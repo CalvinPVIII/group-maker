@@ -1,10 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/PairStyles.css";
 import PersonModal from "./PersonModal";
 
 export default function PopulatedGroups(props) {
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [peopleNotInGroups, setPeopleNotInGroups] = useState(null);
+  const [peopleNotInPairs, setPeopleNotInPairs] = useState(null);
   const pairClasses = {
     0: "firstPair",
     1: "secondPair",
@@ -12,6 +14,10 @@ export default function PopulatedGroups(props) {
     3: "fourthPair",
     4: "fifthPair",
   };
+
+  useEffect(() => {
+    organizeGroups(props.cohort);
+  }, [props.cohort]);
 
   let draggedPersonInfo = {
     person: null,
@@ -27,6 +33,31 @@ export default function PopulatedGroups(props) {
     e.stopPropagation();
   };
 
+  const organizeGroups = (cohort) => {
+    let peopleNotInGroups = [...cohort.people];
+    let peopleNotInPairs = [...cohort.people];
+    console.log(cohort);
+    Object.values(cohort.groups).forEach((group) => {
+      group.currentGroup.forEach((person) => {
+        if (group.currentGroup.filter((p) => p.id === person.id).length > 0) {
+          peopleNotInGroups = peopleNotInGroups.filter((p) => p.id !== person.id);
+        }
+      });
+
+      // not sure if this is needed, or works
+      if (group.currentPairs) {
+        group.currentPairs.forEach((pair) => {
+          Object.values(pair).forEach((person) => {
+            peopleNotInPairs = peopleNotInPairs.filter((p) => p.id !== person.id);
+          });
+        });
+      }
+    });
+
+    setPeopleNotInGroups(peopleNotInGroups);
+    setPeopleNotInPairs(peopleNotInPairs);
+  };
+
   const handleDrop = (groupKey) => {
     if (groupKey === draggedPersonInfo.initialGroup) return;
     props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
@@ -37,11 +68,6 @@ export default function PopulatedGroups(props) {
     };
   };
 
-  // useEffect(() => {
-
-  // }, []);
-
-  console.log(props);
   if (props.groups) {
     return (
       <div>

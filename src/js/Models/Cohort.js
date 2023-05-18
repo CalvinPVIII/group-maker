@@ -149,4 +149,13 @@ export default class Cohort {
     this.groups[groupKey] = group;
     Cohort.update(this);
   }
+
+  removePersonFromPairs(groupKey, pairKey, person) {
+    const filteredPair = this.groups[groupKey].currentPairs[pairKey].filter((p) => p.id !== person.id);
+    filteredPair.forEach((p) => {
+      Person.format(p).removeFromPairHistory(person);
+    });
+    this.groups[groupKey].currentPairs[pairKey] = filteredPair;
+    Cohort.update(this);
+  }
 }
