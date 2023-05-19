@@ -55,12 +55,12 @@ export default function Home() {
                   {cohort.name}
                 </p>
               ))}
-              <button onClick={() => setCurrentlyVisibleState("add_cohort")}>Add cohort</button>
               <br />
             </>
           ) : (
             <></>
           )}
+          <button onClick={() => setCurrentlyVisibleState("add_cohort")}>Add cohort</button>
         </>
       );
   }

@@ -48,20 +48,23 @@ export default class Person {
   }
 
   #addToHistory(listName, pair) {
-    if (this[listName][pair.id]) {
-      this[listName][pair.id].timesMatched += 1;
-      pair[listName][this.id].timesMatched += 1;
-    } else {
-      this[listName][pair.id] = {
-        name: pair.name,
-        timesMatched: 1,
-      };
-
+    if (!pair[listName][this.id]) {
       pair[listName][this.id] = {
         name: this.name,
-        timesMatched: 1,
+        timesMatched: 0,
       };
     }
+
+    if (!this[listName][pair.id]) {
+      this[listName][pair.id] = {
+        name: pair.name,
+        timesMatched: 0,
+      };
+    }
+
+    this[listName][pair.id].timesMatched += 1;
+    pair[listName][this.id].timesMatched += 1;
+
     Person.update(pair);
     return Person.update(this);
   }

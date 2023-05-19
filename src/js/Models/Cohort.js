@@ -158,4 +158,12 @@ export default class Cohort {
     this.groups[groupKey].currentPairs[pairKey] = filteredPair;
     Cohort.update(this);
   }
+
+  groupToString(groupIndex) {
+    return this.groups[groupIndex].currentGroup
+      .map((person) => {
+        return person.name;
+      })
+      .join("\n");
+  }
 }

@@ -35,20 +35,22 @@ export default function PopulatedGroups(props) {
 
   const organizeGroups = (cohort) => {
     let peopleNotInGroups = [...cohort.people];
-    let peopleNotInPairs = [...cohort.people];
+    let peopleNotInPairs = {};
     console.log(cohort);
-    Object.values(cohort.groups).forEach((group) => {
+    Object.values(cohort.groups).forEach((group, groupIndex) => {
       group.currentGroup.forEach((person) => {
         if (group.currentGroup.filter((p) => p.id === person.id).length > 0) {
           peopleNotInGroups = peopleNotInGroups.filter((p) => p.id !== person.id);
         }
       });
 
-      // not sure if this is needed, or works
       if (group.currentPairs) {
         group.currentPairs.forEach((pair) => {
+          if (!peopleNotInPairs[groupIndex]) {
+            peopleNotInPairs[groupIndex] = [...group.currentGroup];
+          }
           Object.values(pair).forEach((person) => {
-            peopleNotInPairs = peopleNotInPairs.filter((p) => p.id !== person.id);
+            peopleNotInPairs[groupIndex] = peopleNotInPairs[groupIndex].filter((p) => p.id !== person.id);
           });
         });
       }
@@ -59,9 +61,18 @@ export default function PopulatedGroups(props) {
   };
 
   const handleDrop = (groupKey) => {
+    console.log("Dropping " + draggedPersonInfo.person.name);
+    console.log("initially in group " + draggedPersonInfo.initialGroup);
     if (groupKey === draggedPersonInfo.initialGroup) return;
-    props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
-    props.cohort.addPersonToGroup(groupKey, draggedPersonInfo.person);
+    if (draggedPersonInfo.initialGroup) {
+      console.log("Removing from group " + draggedPersonInfo.initialGroup);
+      props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
+    }
+    if (groupKey || groupKey === 0) {
+      console.log("being added to group " + groupKey);
+      console.log(groupKey === 0);
+      props.cohort.addPersonToGroup(groupKey, draggedPersonInfo.person);
+    }
     draggedPersonInfo = {
       person: null,
       initialGroup: null,
@@ -113,28 +124,67 @@ export default function PopulatedGroups(props) {
                     </>
                   ) : (
                     <>
-                      {group.currentPairs.map((pair, pairIndex) =>
-                        Object.values(pair).map((person) => (
-                          <p
-                            key={uuidv4()}
-                            className={pairClasses[pairIndex]}
-                            draggable
-                            id={person.id}
-                            onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
-                            onClick={() => setSelectedPerson(person)}
-                          >
-                            {person.name}
-                          </p>
-                        ))
+                      {group.currentPairs.map((pair, pairIndex) => (
+                        <>
+                          {Object.values(pair).map((person) => (
+                            <p
+                              key={uuidv4()}
+                              className={pairClasses[pairIndex]}
+                              draggable
+                              id={person.id}
+                              onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                              onClick={() => setSelectedPerson(person)}
+                            >
+                              {person.name}
+                            </p>
+                          ))}
+                        </>
+                      ))}
+                      {peopleNotInPairs && peopleNotInPairs[groupIndex] ? (
+                        <>
+                          {peopleNotInPairs[groupIndex].map((person) => (
+                            <p
+                              key={uuidv4()}
+                              draggable
+                              id={person}
+                              onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                              onClick={() => setSelectedPerson(person)}
+                            >
+                              {person.name}
+                            </p>
+                          ))}
+                        </>
+                      ) : (
+                        <></>
                       )}
                     </>
                   )}
                 </div>
-                <button onClick={() => navigator.clipboard.writeText(group.join("\n"))}>Copy to clipboard</button>
+                <button onClick={() => navigator.clipboard.writeText(props.cohort.groupToString(groupIndex))}>Copy to clipboard</button>
                 <button onClick={() => props.cohort.generatePairsForGroup(groupIndex)}>Assign pairs</button>
               </div>
             </>
           ))}
+          {peopleNotInGroups ? (
+            <>
+              <div
+                key={uuidv4()}
+                name="notInGroup"
+                style={{ border: "2px solid white", width: "200px" }}
+                onDrop={() => handleDrop(null)}
+                onDragOver={(e) => handleOnDragOver(e)}
+              >
+                <h4>Not In A Group</h4>
+                {peopleNotInGroups.map((person) => (
+                  <p key={uuidv4()} draggable id={person} onDragStart={() => handleDrag(null, person)} onClick={() => setSelectedPerson(person)}>
+                    {person.name}
+                  </p>
+                ))}
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         {selectedPerson ? <PersonModal person={selectedPerson} handleExit={() => setSelectedPerson(null)} /> : <></>}
       </div>
