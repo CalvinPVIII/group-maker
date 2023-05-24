@@ -9,6 +9,7 @@ export default function CohortForm(props) {
     const cohort = new Cohort(nameInput, [], descriptionInput, null, 1, []);
     Cohort.save(cohort);
     console.log(cohort);
+    props.changeState("home");
   };
 
   const editCohort = () => {

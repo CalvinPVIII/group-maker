@@ -101,6 +101,8 @@ export default function PopulatedGroups(props) {
             margin: "auto",
             display: "flex",
             justifyContent: "space-evenly",
+            flexFlow: "row",
+            flexWrap: "wrap",
             position: "relative",
             zIndex: "1",
           }}

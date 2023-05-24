@@ -4,10 +4,12 @@ import InputNames from "./InputNames";
 import PopulatedGroups from "./PopulatedGroups";
 import PeopleNames from "./PeopleNames";
 import GroupingSettings from "./GroupingSettings";
+import CohortSettingsModal from "./CohortSettingsModal";
 
 export default function CohortComponent(props) {
   const [people, setPeople] = useState();
   const [currentCohort, setCurrentCohort] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const togglePeopleNames = (element) => {
     const target = element.target.nextElementSibling;
@@ -41,36 +43,41 @@ export default function CohortComponent(props) {
 
   if (currentCohort) {
     return (
-      <div style={{ textAlign: "center" }}>
-        <h1>Cohort: {currentCohort.name}</h1>
-        <h4>{currentCohort.description}</h4>
-
-        {/* <InputNames cohort={currentCohort} /> */}
-
-        {people && people.length > 0 ? (
-          <>
-            <h4 className="clickable" onClick={togglePeopleNames}>
-              {" "}
-              People in Cohort: {people.length}
-            </h4>
-            <PeopleNames people={people} cohort={currentCohort} />
-
-            <GroupingSettings namesLength={people.length} handleCreateGroups={handleCreateGroups} />
-            {currentCohort.groups && Object.values(currentCohort.groups).length > 0 ? (
-              <>
-                <PopulatedGroups groups={Object.values(currentCohort.groups)} cohort={currentCohort} />
-              </>
-            ) : (
-              <>no groups</>
-            )}
-          </>
+      <>
+        {modalVisible ? (
+          <CohortSettingsModal cohort={currentCohort} changeState={props.changeState} handleExit={() => setModalVisible(false)} />
         ) : (
-          <>
-            <p>There are no people</p>
-            <InputNames cohort={currentCohort} />
-          </>
+          <></>
         )}
-      </div>
+        <div style={{ textAlign: "center" }}>
+          <h1 onClick={() => setModalVisible(true)}>Cohort: {currentCohort.name}</h1>
+          <h4>{currentCohort.description}</h4>
+
+          {people && people.length > 0 ? (
+            <>
+              <h4 className="clickable" onClick={togglePeopleNames}>
+                {" "}
+                People in Cohort: {people.length}
+              </h4>
+              <PeopleNames people={people} cohort={currentCohort} />
+
+              <GroupingSettings namesLength={people.length} handleCreateGroups={handleCreateGroups} />
+              {currentCohort.groups && Object.values(currentCohort.groups).length > 0 ? (
+                <>
+                  <PopulatedGroups groups={Object.values(currentCohort.groups)} cohort={currentCohort} />
+                </>
+              ) : (
+                <>no groups</>
+              )}
+            </>
+          ) : (
+            <>
+              <p>There are no people</p>
+              <InputNames cohort={currentCohort} />
+            </>
+          )}
+        </div>
+      </>
     );
   } else {
     return <></>;

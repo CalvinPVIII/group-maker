@@ -36,11 +36,11 @@ export default function Home() {
 
   switch (currentlyVisibleState) {
     case "add_cohort":
-      visibleState = <CohortForm type="add" />;
+      visibleState = <CohortForm type="add" changeState={setCurrentlyVisibleState} />;
       break;
     case "selected_cohort":
       if (selectedCohort) {
-        visibleState = <Cohort cohort={selectedCohort} />;
+        visibleState = <Cohort cohort={selectedCohort} changeState={setCurrentlyVisibleState} />;
       }
       break;
     default:
