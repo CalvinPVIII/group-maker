@@ -151,11 +151,20 @@ export default class Cohort {
   }
 
   removePersonFromPairs(groupKey, pairKey, person) {
-    const filteredPair = this.groups[groupKey].currentPairs[pairKey].filter((p) => p.id !== person.id);
-    filteredPair.forEach((p) => {
-      Person.format(p).removeFromPairHistory(person);
-    });
-    this.groups[groupKey].currentPairs[pairKey] = filteredPair;
+    const removedPeople = this.groups[groupKey].currentPairs.splice(pairKey, 1);
+
+    const peopleToUpdate = Object.values(removedPeople[0]);
+
+    while (peopleToUpdate.length > 0) {
+      person = Person.format(peopleToUpdate[0]);
+      if (peopleToUpdate[1]) {
+        for (let i = 1; i < peopleToUpdate.length; i++) {
+          person.removeFromPairHistory(peopleToUpdate[i]);
+        }
+      }
+      peopleToUpdate.shift();
+    }
+    console.log(this.groups[groupKey].currentPairs);
     Cohort.update(this);
   }
 

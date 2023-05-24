@@ -22,10 +22,13 @@ export default function PopulatedGroups(props) {
   let draggedPersonInfo = {
     person: null,
     initialGroup: null,
+    initialPair: null,
   };
-  const handleDrag = (groupKey, person) => {
+  const handleDrag = (groupKey, person, pair) => {
     draggedPersonInfo.person = person;
     draggedPersonInfo.initialGroup = groupKey;
+    draggedPersonInfo.initialPair = pair;
+    console.log("drag pair key", pair);
   };
 
   const handleOnDragOver = (e) => {
@@ -72,7 +75,13 @@ export default function PopulatedGroups(props) {
       console.log("being added to group " + groupKey);
       console.log(groupKey === 0);
       props.cohort.addPersonToGroup(groupKey, draggedPersonInfo.person);
+
+      if (draggedPersonInfo.initialPair || draggedPersonInfo.initialPair === 0) {
+        console.log("removing from pairs");
+        props.cohort.removePersonFromPairs(draggedPersonInfo.initialGroup, draggedPersonInfo.initialPair, draggedPersonInfo.person);
+      }
     }
+
     draggedPersonInfo = {
       person: null,
       initialGroup: null,
@@ -115,7 +124,7 @@ export default function PopulatedGroups(props) {
                           key={uuidv4()}
                           draggable
                           id={person}
-                          onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                          onDragStart={() => handleDrag(props.groups.indexOf(group), person, null)}
                           onClick={() => setSelectedPerson(person)}
                         >
                           {person.name}
@@ -132,7 +141,7 @@ export default function PopulatedGroups(props) {
                               className={pairClasses[pairIndex]}
                               draggable
                               id={person.id}
-                              onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                              onDragStart={() => handleDrag(props.groups.indexOf(group), person, group.currentPairs.indexOf(pair))}
                               onClick={() => setSelectedPerson(person)}
                             >
                               {person.name}
@@ -147,7 +156,7 @@ export default function PopulatedGroups(props) {
                               key={uuidv4()}
                               draggable
                               id={person}
-                              onDragStart={() => handleDrag(props.groups.indexOf(group), person)}
+                              onDragStart={() => handleDrag(props.groups.indexOf(group), person, null)}
                               onClick={() => setSelectedPerson(person)}
                             >
                               {person.name}
