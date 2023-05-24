@@ -107,6 +107,14 @@ export default class Cohort {
     return groups;
   }
 
+  removePersonFromCohort(person) {
+    this.people = this.people.filter((p) => p.id !== person.id);
+
+    person.cohortId = null;
+    Person.update(person);
+    Cohort.update(this);
+  }
+
   addPersonToGroup(groupKey, person) {
     this.groups[groupKey].currentGroup.forEach((p) => {
       Person.format(p).addToGroupHistory(person);
