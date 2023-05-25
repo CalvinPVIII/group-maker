@@ -26,6 +26,7 @@ export default function Home(props) {
         });
         setCohorts(result);
       });
+      return () => unsub();
     } else if (!auth.currentUser) {
       setCurrentUser(false);
     }
@@ -37,7 +38,7 @@ export default function Home(props) {
     const updatedCohort = cohorts.find((c) => c.id === selectedCohort.id);
 
     setSelectedCohort(updatedCohort);
-  }, [cohorts]);
+  }, [cohorts, selectedCohort]);
 
   const handleCohortNameClick = (cohort) => {
     setSelectedCohort(cohort);

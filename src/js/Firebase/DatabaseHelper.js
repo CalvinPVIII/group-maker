@@ -1,8 +1,6 @@
 import db from "./db.js";
-import Person from "../Models/Person.js";
-import Cohort from "../Models/Cohort.js";
 
-import { setDoc, doc, getDoc, deleteDoc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { setDoc, doc, getDoc, deleteDoc, getDocs, collection } from "firebase/firestore";
 
 export default class DatabaseHelper {
   static async post(collection, data) {

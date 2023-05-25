@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Cohort from "../js/Models/Cohort";
+
 import Person from "../js/Models/Person";
 
 export default function InputNames(props) {
