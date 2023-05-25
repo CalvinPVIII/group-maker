@@ -31,8 +31,6 @@ export default function CohortForm(props) {
       </label>
 
       {props.type === "edit" && props.cohort ? <button onClick={editCohort}>Edit</button> : <button onClick={addCohort}>Add</button>}
-      <br />
-      <button>Go Back</button>
     </>
   );
 }

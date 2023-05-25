@@ -1,14 +1,19 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import CohortForm from "./CohortForm.jsx";
 import Cohort from "./Cohort.jsx";
+import SignIn from "./SignIn.jsx";
 import { collection, onSnapshot } from "firebase/firestore";
 import db from "../js/Firebase/db.js";
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar.jsx";
+
+export const UserContext = createContext(null);
 
 export default function Home() {
   const [cohorts, setCohorts] = useState();
   const [currentlyVisibleState, setCurrentlyVisibleState] = useState("home");
   const [selectedCohort, setSelectedCohort] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "cohorts"), (snapshot) => {
       const result = [];
@@ -43,6 +48,9 @@ export default function Home() {
         visibleState = <Cohort cohort={selectedCohort} changeState={setCurrentlyVisibleState} />;
       }
       break;
+    case "sign_in":
+      visibleState = <SignIn changeState={setCurrentlyVisibleState} />;
+      break;
     default:
       visibleState = (
         <>
@@ -67,14 +75,17 @@ export default function Home() {
 
   return (
     <>
-      <div className="app" style={{ textAlign: "center" }}>
-        {visibleState}
-        <br />
-        <button onClick={() => setCurrentlyVisibleState("home")}>Home</button>
-        <h3>
-          <Link to="/v1">Group maker v1</Link>
-        </h3>
-      </div>
+      <UserContext.Provider value={{ currentUser: currentUser, setCurrentUser: setCurrentUser }}>
+        <Navbar changeState={setCurrentlyVisibleState} />
+        <div className="app" style={{ textAlign: "center" }}>
+          {visibleState}
+          <br />
+
+          <h3>
+            <Link to="/v1">Group maker v1</Link>
+          </h3>
+        </div>
+      </UserContext.Provider>
     </>
   );
 }
