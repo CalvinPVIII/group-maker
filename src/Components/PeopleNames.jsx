@@ -1,7 +1,6 @@
 import InputNames from "./InputNames";
 
 export default function PeopleNames(props) {
-  console.log(props);
   const handleDelete = (person) => {
     props.cohort.removePersonFromCohort(person);
   };

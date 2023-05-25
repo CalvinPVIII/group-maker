@@ -19,16 +19,14 @@ export default function SignIn(props) {
       email = signInEmail;
       password = signInPassword;
     }
-    console.log(email, password);
+
     setPersistence(auth, browserLocalPersistence);
     signInWithEmailAndPassword(auth, email, password)
       .then((user) => {
         setSignInMessage("");
-        console.log("sign in");
         navigate("/");
       })
       .catch((error) => {
-        console.log(error);
         setSignInMessage("Unable to sign in: " + error);
       });
   };

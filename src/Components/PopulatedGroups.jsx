@@ -28,7 +28,6 @@ export default function PopulatedGroups(props) {
     draggedPersonInfo.person = person;
     draggedPersonInfo.initialGroup = groupKey;
     draggedPersonInfo.initialPair = pair;
-    console.log("drag pair key", pair);
   };
 
   const handleOnDragOver = (e) => {
@@ -39,7 +38,7 @@ export default function PopulatedGroups(props) {
   const organizeGroups = (cohort) => {
     let peopleNotInGroups = [...cohort.people];
     let peopleNotInPairs = {};
-    console.log(cohort);
+
     Object.values(cohort.groups).forEach((group, groupIndex) => {
       group.currentGroup.forEach((person) => {
         if (group.currentGroup.filter((p) => p.id === person.id).length > 0) {
@@ -64,20 +63,14 @@ export default function PopulatedGroups(props) {
   };
 
   const handleDrop = (groupKey) => {
-    console.log("Dropping " + draggedPersonInfo.person.name);
-    console.log("initially in group " + draggedPersonInfo.initialGroup);
     if (groupKey === draggedPersonInfo.initialGroup) return;
     if (draggedPersonInfo.initialGroup) {
-      console.log("Removing from group " + draggedPersonInfo.initialGroup);
       props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
     }
     if (groupKey || groupKey === 0) {
-      console.log("being added to group " + groupKey);
-      console.log(groupKey === 0);
       props.cohort.addPersonToGroup(groupKey, draggedPersonInfo.person);
 
       if (draggedPersonInfo.initialPair || draggedPersonInfo.initialPair === 0) {
-        console.log("removing from pairs");
         props.cohort.removePersonFromPairs(draggedPersonInfo.initialGroup, draggedPersonInfo.initialPair, draggedPersonInfo.person);
       }
     }

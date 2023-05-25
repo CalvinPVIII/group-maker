@@ -1,5 +1,4 @@
 export default function PersonModal(props) {
-  console.log(props.person);
   const wordStyle = { wordWrap: "break-word" };
   return (
     <>

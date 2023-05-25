@@ -5,7 +5,7 @@ import SignIn from "./SignIn.jsx";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import db, { auth } from "../js/Firebase/db.js";
 import { Link } from "react-router-dom";
-import Navbar from "./Navbar.jsx";
+import V1Home from "./v1/Home.jsx";
 
 export const UserContext = createContext(null);
 
@@ -16,7 +16,6 @@ export default function Home() {
 
   useEffect(() => {
     if (auth.currentUser) {
-      console.log("user signed in", auth.currentUser);
       const q = query(collection(db, "cohorts"), where("creatorId", "==", auth.currentUser.uid));
       const unsub = onSnapshot(q, (snapshot) => {
         const result = [];
@@ -80,9 +79,8 @@ export default function Home() {
   return (
     <>
       <UserContext.Provider value={auth.currentUser}>
-        <Navbar />
         <div className="app" style={{ textAlign: "center" }}>
-          {auth.currentUser ? <>{visibleState}</> : <p>Please sign in to continue</p>}
+          {auth.currentUser ? <>{visibleState}</> : <V1Home />}
 
           <br />
 

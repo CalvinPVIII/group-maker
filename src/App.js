@@ -3,11 +3,13 @@ import GrouperV1 from "./Components/v1/GrouperV1.jsx";
 import "./App.css";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/SignIn.jsx";
+import Navbar from "./Components/Navbar.jsx";
 
 function App() {
   return (
     <div className="App">
       <HashRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/v1" element={<GrouperV1 />} />

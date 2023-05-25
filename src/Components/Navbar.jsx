@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { UserContext } from "./Home";
 import { Link } from "react-router-dom";
 import { auth } from "../js/Firebase/db";
 import { signOut } from "firebase/auth";
@@ -7,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const user = useContext(UserContext);
+  const user = auth.currentUser;
 
   const handleSignOut = () => {
     signOut(auth);
@@ -16,7 +14,7 @@ export default function Navbar() {
 
   return (
     <div style={{ textAlign: "right", marginRight: "10px" }}>
-      <p className="clickable">
+      <>
         {user ? (
           <>
             {user.email}{" "}
@@ -32,7 +30,7 @@ export default function Navbar() {
         <Link to="/" className="navbarItems">
           Home
         </Link>
-      </p>
+      </>
     </div>
   );
 }

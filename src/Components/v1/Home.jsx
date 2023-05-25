@@ -48,18 +48,18 @@ export default function Home() {
   return (
     <div className="app">
       <h1 style={{ textAlign: "center" }}>Group Maker v1</h1>
-      <h4 style={{ textAlign: "center" }}>This is version 1 of group maker</h4>
+      <h4 style={{ textAlign: "center" }}>This is the previous version of Group Maker</h4>
       <h4 style={{ textAlign: "center" }}>It only saves locally, and pairs cannot be created</h4>
-
+      <h4 style={{ textAlign: "center" }}>If you want to have your data saved, as well as access to additional features, please sign in</h4>
+      <h3 style={{ textAlign: "center" }}>
+        <Link to="/">If you are signed in, click here to go to the latest version of Group maker</Link>
+      </h3>
       <InputNames setGroups={setGroups} updateHistory={updateStoredHistory} undoLastGrouping={undoLastGrouping} />
       <PopulatedGroups groups={groups} dragAndDropName={dragAndDropName} />
       <GroupHistory groups={groups} history={groupHistory} />
       <div style={{ textAlign: "center" }}>
         <button onClick={confirmText === "Are you sure?" ? resetStoredHistory : () => setConfirmText("Are you sure?")}>{confirmText}</button>
       </div>
-      <h3 style={{ textAlign: "center" }}>
-        <Link to="/">Latest version of group maker</Link>
-      </h3>
     </div>
   );
 }

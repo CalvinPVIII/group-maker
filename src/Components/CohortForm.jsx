@@ -7,12 +7,11 @@ export default function CohortForm(props) {
   const [nameInput, setNameInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
 
-  console.log(user);
   const addCohort = () => {
     if (user) {
       const cohort = new Cohort(nameInput, [], descriptionInput, null, user.uid, []);
       Cohort.save(cohort);
-      console.log(cohort);
+
       props.changeState("home");
     }
   };
