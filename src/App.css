@@ -36,3 +36,25 @@ a {
 .clickable:hover {
   cursor: pointer;
 }
+
+.userForm {
+  display: flex;
+  flex-flow: column;
+  width: 300px;
+}
+
+.userForm label {
+  text-align: left;
+}
+
+.navbarItems {
+  text-decoration: none;
+  color: white;
+  margin-left: 10px;
+}
+
+.navbarItems:hover {
+  text-decoration: underline;
+  color: white;
+  margin-left: 10px;
+}

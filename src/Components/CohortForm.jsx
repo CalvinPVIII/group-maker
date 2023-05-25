@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Cohort from "../js/Models/Cohort";
+import { UserContext } from "./Home";
 
 export default function CohortForm(props) {
+  const user = useContext(UserContext);
   const [nameInput, setNameInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
 
+  console.log(user);
   const addCohort = () => {
-    const cohort = new Cohort(nameInput, [], descriptionInput, null, 1, []);
-    Cohort.save(cohort);
-    console.log(cohort);
-    props.changeState("home");
+    if (user) {
+      const cohort = new Cohort(nameInput, [], descriptionInput, null, user.uid, []);
+      Cohort.save(cohort);
+      console.log(cohort);
+      props.changeState("home");
+    }
   };
 
   const editCohort = () => {

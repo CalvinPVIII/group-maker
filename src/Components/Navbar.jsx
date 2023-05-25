@@ -1,24 +1,37 @@
 import { useContext } from "react";
 import { UserContext } from "./Home";
+import { Link } from "react-router-dom";
+import { auth } from "../js/Firebase/db";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
-export default function Navbar(props) {
+export default function Navbar() {
+  const navigate = useNavigate();
   const user = useContext(UserContext);
 
-  const handleSignInClick = () => {
-    props.changeState("sign_in");
-  };
-
-  const handleHomeClick = () => {
-    props.changeState("home");
+  const handleSignOut = () => {
+    signOut(auth);
+    navigate(0);
   };
 
   return (
     <div style={{ textAlign: "right", marginRight: "10px" }}>
       <p className="clickable">
-        {user.currentUser ? <span>{user.currentUser.email}</span> : <span onClick={handleSignInClick}>Sign In</span>}
-        <span style={{ marginLeft: "20px" }} onClick={handleHomeClick}>
+        {user ? (
+          <>
+            {user.email}{" "}
+            <span className="navbarItems" onClick={handleSignOut}>
+              Sign Out
+            </span>
+          </>
+        ) : (
+          <Link to="/sign-in" className="navbarItems">
+            Sign In
+          </Link>
+        )}
+        <Link to="/" className="navbarItems">
           Home
-        </span>
+        </Link>
       </p>
     </div>
   );

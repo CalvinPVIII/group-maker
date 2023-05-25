@@ -2,8 +2,8 @@ import { useState, useEffect, createContext } from "react";
 import CohortForm from "./CohortForm.jsx";
 import Cohort from "./Cohort.jsx";
 import SignIn from "./SignIn.jsx";
-import { collection, onSnapshot } from "firebase/firestore";
-import db from "../js/Firebase/db.js";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import db, { auth } from "../js/Firebase/db.js";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
 
@@ -13,16 +13,20 @@ export default function Home() {
   const [cohorts, setCohorts] = useState();
   const [currentlyVisibleState, setCurrentlyVisibleState] = useState("home");
   const [selectedCohort, setSelectedCohort] = useState();
-  const [currentUser, setCurrentUser] = useState(null);
+
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "cohorts"), (snapshot) => {
-      const result = [];
-      snapshot.forEach((cohort) => {
-        result.push({ ...cohort.data() });
+    if (auth.currentUser) {
+      console.log("user signed in", auth.currentUser);
+      const q = query(collection(db, "cohorts"), where("creatorId", "==", auth.currentUser.uid));
+      const unsub = onSnapshot(q, (snapshot) => {
+        const result = [];
+        snapshot.forEach((cohort) => {
+          result.push({ ...cohort.data() });
+        });
+        setCohorts(result);
       });
-      setCohorts(result);
-    });
-  }, []);
+    }
+  }, [auth.currentUser]);
 
   useEffect(() => {
     if (!selectedCohort) return;
@@ -59,7 +63,7 @@ export default function Home() {
             <>
               <h3>Cohorts:</h3>
               {cohorts.map((cohort) => (
-                <p key={cohort.id} onClick={() => handleCohortNameClick(cohort)}>
+                <p className="clickable" key={cohort.id} onClick={() => handleCohortNameClick(cohort)}>
                   {cohort.name}
                 </p>
               ))}
@@ -75,10 +79,11 @@ export default function Home() {
 
   return (
     <>
-      <UserContext.Provider value={{ currentUser: currentUser, setCurrentUser: setCurrentUser }}>
-        <Navbar changeState={setCurrentlyVisibleState} />
+      <UserContext.Provider value={auth.currentUser}>
+        <Navbar />
         <div className="app" style={{ textAlign: "center" }}>
-          {visibleState}
+          {auth.currentUser ? <>{visibleState}</> : <p>Please sign in to continue</p>}
+
           <br />
 
           <h3>
