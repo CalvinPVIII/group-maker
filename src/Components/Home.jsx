@@ -9,9 +9,9 @@ import V1Home from "./v1/Home.jsx";
 
 export const UserContext = createContext(null);
 
-export default function Home() {
+export default function Home(props) {
   const [cohorts, setCohorts] = useState();
-  const [currentlyVisibleState, setCurrentlyVisibleState] = useState("home");
+  const { currentlyVisibleState, setCurrentlyVisibleState } = props;
   const [selectedCohort, setSelectedCohort] = useState();
 
   useEffect(() => {
@@ -72,6 +72,9 @@ export default function Home() {
             <></>
           )}
           <button onClick={() => setCurrentlyVisibleState("add_cohort")}>Add cohort</button>
+          <h3>
+            <Link to="/v1">Group maker v1</Link>
+          </h3>
         </>
       );
   }
@@ -83,10 +86,6 @@ export default function Home() {
           {auth.currentUser ? <>{visibleState}</> : <V1Home />}
 
           <br />
-
-          <h3>
-            <Link to="/v1">Group maker v1</Link>
-          </h3>
         </div>
       </UserContext.Provider>
     </>

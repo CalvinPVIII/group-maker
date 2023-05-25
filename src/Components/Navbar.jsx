@@ -3,13 +3,17 @@ import { auth } from "../js/Firebase/db";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar(props) {
   const navigate = useNavigate();
   const user = auth.currentUser;
 
   const handleSignOut = () => {
     signOut(auth);
     navigate(0);
+  };
+
+  const handleHomeClick = () => {
+    props.setCurrentlyVisibleState("home");
   };
 
   return (
@@ -27,7 +31,7 @@ export default function Navbar() {
             Sign In
           </Link>
         )}
-        <Link to="/" className="navbarItems">
+        <Link to="/" className="navbarItems" onClick={handleHomeClick}>
           Home
         </Link>
       </>
