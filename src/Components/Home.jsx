@@ -13,9 +13,11 @@ export default function Home(props) {
   const [cohorts, setCohorts] = useState();
   const { currentlyVisibleState, setCurrentlyVisibleState } = props;
   const [selectedCohort, setSelectedCohort] = useState();
+  const [currentUser, setCurrentUser] = useState("loading");
 
   useEffect(() => {
     if (auth.currentUser) {
+      setCurrentUser(true);
       const q = query(collection(db, "cohorts"), where("creatorId", "==", auth.currentUser.uid));
       const unsub = onSnapshot(q, (snapshot) => {
         const result = [];
@@ -24,8 +26,10 @@ export default function Home(props) {
         });
         setCohorts(result);
       });
+    } else if (!auth.currentUser) {
+      setCurrentUser(false);
     }
-  }, [auth.currentUser]);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!selectedCohort) return;
@@ -83,7 +87,7 @@ export default function Home(props) {
     <>
       <UserContext.Provider value={auth.currentUser}>
         <div className="app" style={{ textAlign: "center" }}>
-          {auth.currentUser ? <>{visibleState}</> : <V1Home />}
+          {currentUser ? <>{visibleState}</> : currentUser === "loading" ? <h2>Loading</h2> : <V1Home />}
 
           <br />
         </div>

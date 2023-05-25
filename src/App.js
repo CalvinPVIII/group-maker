@@ -1,7 +1,7 @@
 import Home from "./Components/Home.jsx";
 import GrouperV1 from "./Components/v1/GrouperV1.jsx";
 import "./App.css";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/SignIn.jsx";
 import Navbar from "./Components/Navbar.jsx";
 import { useState } from "react";
@@ -10,7 +10,7 @@ function App() {
   const [currentlyVisibleState, setCurrentlyVisibleState] = useState("home");
   return (
     <div className="App">
-      <HashRouter>
+      <BrowserRouter>
         <Navbar setCurrentlyVisibleState={setCurrentlyVisibleState} />
         <Routes>
           <Route path="/" element={<Home currentlyVisibleState={currentlyVisibleState} setCurrentlyVisibleState={setCurrentlyVisibleState} />} />
@@ -18,7 +18,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignIn />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </div>
   );
 }
