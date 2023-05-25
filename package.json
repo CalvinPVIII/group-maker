@@ -1,7 +1,6 @@
 {
   "name": "grouper-web-app",
   "version": "0.1.0",
-  "homepage": "https://calvinpviii.github.io/group-maker",
   "private": true,
   "type": "module",
   "dependencies": {
