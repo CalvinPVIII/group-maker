@@ -64,7 +64,7 @@ export default function PopulatedGroups(props) {
 
   const handleDrop = (groupKey) => {
     if (groupKey === draggedPersonInfo.initialGroup) return;
-    if (draggedPersonInfo.initialGroup) {
+    if (draggedPersonInfo.initialGroup || draggedPersonInfo.initialGroup === 0) {
       props.cohort.removePersonFromGroup(draggedPersonInfo.initialGroup, draggedPersonInfo.person);
     }
     if (groupKey || groupKey === 0) {
