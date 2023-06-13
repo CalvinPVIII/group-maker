@@ -3,6 +3,7 @@ import CohortForm from "./CohortForm.jsx";
 import Cohort from "./Cohort.jsx";
 import SignIn from "./SignIn.jsx";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import db, { auth } from "../js/Firebase/db.js";
 import { Link } from "react-router-dom";
 import V1Home from "./v1/Home.jsx";
@@ -16,20 +17,22 @@ export default function Home(props) {
   const [currentUser, setCurrentUser] = useState("loading");
 
   useEffect(() => {
-    if (auth.currentUser) {
-      setCurrentUser(true);
-      const q = query(collection(db, "cohorts"), where("creatorId", "==", auth.currentUser.uid));
-      const unsub = onSnapshot(q, (snapshot) => {
-        const result = [];
-        snapshot.forEach((cohort) => {
-          result.push({ ...cohort.data() });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(true);
+        const q = query(collection(db, "cohorts"), where("creatorId", "==", auth.currentUser.uid));
+        const unsub = onSnapshot(q, (snapshot) => {
+          const result = [];
+          snapshot.forEach((cohort) => {
+            result.push({ ...cohort.data() });
+          });
+          setCohorts(result);
         });
-        setCohorts(result);
-      });
-      return () => unsub();
-    } else if (!auth.currentUser) {
-      setCurrentUser(false);
-    }
+        return () => unsub();
+      } else {
+        setCurrentUser(false);
+      }
+    });
   }, [currentUser]);
 
   useEffect(() => {

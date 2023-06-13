@@ -129,7 +129,7 @@ export default function PopulatedGroups(props) {
                   ) : (
                     <>
                       {group.currentPairs.map((pair, pairIndex) => (
-                        <>
+                        <div>
                           {Object.values(pair).map((person) => (
                             <p
                               key={uuidv4()}
@@ -142,7 +142,7 @@ export default function PopulatedGroups(props) {
                               {person.name}
                             </p>
                           ))}
-                        </>
+                        </div>
                       ))}
                       {peopleNotInPairs && peopleNotInPairs[groupIndex] ? (
                         <>
