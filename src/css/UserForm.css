@@ -1,0 +1,17 @@
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.form-button {
+  margin-top: 10px;
+}
+
+.user-form {
+  background-color: #1b2a41;
+  width: 300px;
+  border: 1px solid #0c1821;
+  height: 300px;
+  border-radius: 2%;
+  box-shadow: 3px 3px #0c1821;
+}

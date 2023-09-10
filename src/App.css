@@ -1,62 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:ital@0;1&family=Manrope&display=swap");
+
 body {
   background-color: black;
   color: white;
+  text-align: center;
+  font-family: "Manrope", sans-serif;
 }
 
-textarea {
-  background-color: rgb(57, 55, 55);
+.clickable {
+  text-decoration: underline;
   color: white;
-}
-
-.hidden {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 100ms;
-}
-
-.hidden > div {
-  overflow: hidden;
-}
-
-.shown {
-  grid-template-rows: 1fr;
-}
-
-.clickable:hover {
   cursor: pointer;
 }
-
-a:visited {
-  color: white;
+.clickable:hover {
+  color: #ccc9dc;
 }
+
 a {
-  color: white;
-}
-
-.clickable:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.userForm {
-  display: flex;
-  flex-flow: column;
-  width: 300px;
-}
-
-.userForm label {
-  text-align: left;
-}
-
-.navbarItems {
-  text-decoration: none;
-  color: white;
-  margin-left: 10px;
-}
-
-.navbarItems:hover {
   text-decoration: underline;
   color: white;
-  margin-left: 10px;
   cursor: pointer;
+}
+
+a:hover {
+  color: #ccc9dc;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Karla", sans-serif;
 }

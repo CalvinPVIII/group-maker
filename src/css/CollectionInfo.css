@@ -1,0 +1,7 @@
+.items-visible {
+  display: block;
+}
+
+.items-hidden {
+  display: none;
+}

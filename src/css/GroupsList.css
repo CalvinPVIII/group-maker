@@ -1,0 +1,10 @@
+.groups-wrapper {
+  margin-bottom: 100px;
+}
+
+.groups {
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: wrap;
+  margin-bottom: 20px;
+}
