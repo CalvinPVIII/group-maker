@@ -1,16 +1,16 @@
 import { useState } from "react";
 import auth from "../ts/Firebase/db";
-import { CollectionHelper, Collection } from "../ts/Models/Collection";
+import { CollectionHelper } from "../ts/Models/Collection";
 import { useNavigate } from "react-router-dom";
 import "../css/CollectionForm.css";
 import { useDispatch } from "react-redux";
 import { addCollection } from "../redux/collectionsReducer";
 import { v4 as uuidv4 } from "uuid";
-type CollectionFormProps = {
-  type: "new" | "edit";
-  collection?: Collection;
-};
-export default function CollectionForm(props: CollectionFormProps) {
+// type CollectionFormProps = {
+//   type: "new" | "edit";
+//   collection?: Collection;
+// };
+export default function CollectionForm() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState("");

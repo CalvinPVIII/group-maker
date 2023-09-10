@@ -17,10 +17,10 @@ export class ItemHelper {
 
   static async groupHistory(itemId: string) {
     const groupingHistory: { [key: string]: { name: string; count: number } } = {};
-    const { data: history, error: historyError } = await supabase.from("item_groups").select("groupId").eq("itemId", itemId);
+    const { data: history } = await supabase.from("item_groups").select("groupId").eq("itemId", itemId);
 
     if (history) {
-      const { data: itemsInSameGroups, error: itemsError } = await supabase
+      const { data: itemsInSameGroups } = await supabase
         .from("item_groups")
         .select("items(name, id)")
         .in(

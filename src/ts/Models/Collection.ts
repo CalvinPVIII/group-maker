@@ -19,13 +19,13 @@ export class CollectionHelper {
 
   static async getAllCollectionsFromUserId(userId?: string): Promise<Array<any> | null> {
     if (!userId) return null;
-    const { error, data } = await supabase.from("collections").select().eq("userId", userId);
+    const { data } = await supabase.from("collections").select().eq("userId", userId);
     return data;
   }
 
   static async getFromId(collectionId?: string, userId?: string): Promise<Collection | null> {
     if (!collectionId || !userId) return null;
-    const { error, data } = await supabase
+    const { data } = await supabase
       .from("collections")
       .select("id, name, description, userId, items(name, id)")
       .limit(1)

@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<UserPage />} />
-        <Route path="/new" element={<CollectionForm type="new" />} />
+        <Route path="/new" element={<CollectionForm />} />
         <Route path="/collection/:id" element={<CollectionInfo />} />
       </Routes>
     </>

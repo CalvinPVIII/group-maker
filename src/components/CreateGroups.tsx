@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Item } from "../ts/Models/Item";
 import GroupHelper from "../ts/Models/Group";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { storeGroups } from "../redux/groupsReducer";
 
 type CreateGroupsCallback = {
